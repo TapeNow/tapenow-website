@@ -11,7 +11,10 @@
     "not_found_handling": "404-page"
   },
   "workers_dev": true,
+  // The workbench Worker keeps a zone-wide "*/*" route for customer hostnames. The
+  // more specific "tapenow.dev/*" route makes sure the apex is served from here.
   "routes": [
-    { "pattern": "tapenow.dev", "custom_domain": true }
+    { "pattern": "tapenow.dev", "custom_domain": true },
+    { "pattern": "tapenow.dev/*", "zone_name": "tapenow.dev" }
   ]
 }
