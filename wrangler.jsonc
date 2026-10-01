@@ -1,0 +1,17 @@
+// Static homepage for https://tapenow.dev. No server code: Cloudflare serves public/
+// directly. The workbench (app.tapenow.dev) and release sites (*.tapenow.dev) are a
+// separate Worker and are not affected by deploys from this repository.
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "tapenow-website",
+  "compatibility_date": "2026-09-27",
+  "assets": {
+    "directory": "./public",
+    "html_handling": "auto-trailing-slash",
+    "not_found_handling": "404-page"
+  },
+  "workers_dev": true,
+  "routes": [
+    { "pattern": "tapenow.dev", "custom_domain": true }
+  ]
+}

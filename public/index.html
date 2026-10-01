@@ -1,0 +1,543 @@
+<!doctype html>
+<html lang="en" data-language="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>TapeNow — Build with your agent. Ship it onchain.</title>
+<meta name="description" content="Use WebMCP to work with your agent on website imports, previews, releases and restores. You approve every consequential action. TapeNow supports BSC, X Layer and Base in a limited public beta.">
+<meta property="og:title" content="TapeNow — Build with your agent. Ship it onchain.">
+<meta property="og:description" content="Your agent prepares the release through WebMCP. You approve. TapeNow publishes to BSC, X Layer or Base and keeps a verifiable record of every version.">
+<meta property="og:image" content="https://tapenow.dev/brand/v2/og-en.png">
+<meta property="og:url" content="https://tapenow.dev/">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="theme-color" content="#0f2426">
+<link rel="icon" type="image/svg+xml" href="/brand/v2/favicon.svg">
+<link rel="apple-touch-icon" href="/brand/v2/apple-touch-icon.png">
+<link rel="stylesheet" href="/brand/v2/theme.css">
+<script>
+// Language before first paint: ?lang= wins, then the choice shared with the app and manual.
+(function(){var q=new URLSearchParams(location.search).get('lang'),l='en';try{if(localStorage.getItem('tapenow.language')==='zh-CN')l='zh-CN'}catch(e){}if(q==='en'||q==='zh-CN')l=q;document.documentElement.lang=l;document.documentElement.dataset.language=l;})();
+</script>
+<style>
+:root{--glow-mint:rgba(82,216,196,.55);--glow-coral:rgba(255,139,141,.45);--glass:rgba(255,255,255,.045);--glass-line:rgba(255,255,255,.09)}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;background:var(--tn-night)}
+body{margin:0;font-family:var(--tn-font);color:var(--tn-ink);background:var(--tn-paper);line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+html[data-language="en"] .zh,html[data-language="zh-CN"] .en{display:none!important}
+a{color:inherit}
+img{max-width:100%;display:block}
+.wrap{max-width:1180px;margin:0 auto;padding:0 32px}
+.skip{position:absolute;left:-999px}.skip:focus{left:16px;top:16px;z-index:60;background:var(--tn-white);padding:8px 12px;border-radius:6px}
+:focus-visible{outline:3px solid var(--tn-mint);outline-offset:3px;border-radius:4px}
+.mono{font-family:var(--tn-mono)}
+.grad{background:linear-gradient(100deg,var(--tn-mint) 10%,#9ff0e2 45%,var(--tn-coral) 95%);-webkit-background-clip:text;background-clip:text;color:transparent}
+
+/* Header */
+.top{position:fixed;inset:0 0 auto;z-index:40;transition:background .3s,border-color .3s;border-bottom:1px solid transparent;color:var(--tn-paper)}
+.top.scrolled{background:rgba(12,30,32,.8);backdrop-filter:blur(14px) saturate(140%);-webkit-backdrop-filter:blur(14px) saturate(140%);border-color:var(--glass-line)}
+.top .wrap{display:flex;align-items:center;gap:30px;height:68px}
+.brand{line-height:0;flex-shrink:0}.brand img{width:150px;height:auto}
+.nav{display:flex;gap:24px;font-size:14px;color:var(--tn-dark-muted)}
+.nav a{text-decoration:none;transition:color .2s}.nav a:hover{color:var(--tn-white)}
+.nav .hot{color:var(--tn-mint)}
+.actions{margin-left:auto;display:flex;align-items:center;gap:14px;font-size:14px}
+.actions select{background:rgba(255,255,255,.04);color:var(--tn-dark-muted);border:1px solid var(--glass-line);border-radius:8px;padding:6px 8px;font:inherit;font-size:13px}
+.actions select option{color:var(--tn-ink)}
+.signin{text-decoration:none;color:var(--tn-dark-muted)}.signin:hover{color:var(--tn-white)}
+.btn{position:relative;display:inline-flex;align-items:center;gap:8px;border-radius:10px;padding:12px 20px;font-weight:600;text-decoration:none;font-size:15px;transition:transform .2s var(--tn-ease),box-shadow .25s,background .2s,border-color .2s}
+.btn:hover{transform:translateY(-2px)}
+.btn-mint{background:var(--tn-mint);color:var(--tn-night);box-shadow:0 0 0 1px rgba(82,216,196,.5),0 10px 30px -8px var(--glow-mint)}
+.btn-mint:hover{box-shadow:0 0 0 1px rgba(82,216,196,.8),0 16px 44px -8px var(--glow-mint)}
+.btn-ghost{border:1px solid var(--glass-line);color:var(--tn-paper);background:rgba(255,255,255,.03)}.btn-ghost:hover{border-color:rgba(82,216,196,.6)}
+.top .btn{padding:9px 16px;font-size:14px}
+
+/* Dark stage shared by hero, WebMCP and closing */
+.dark{position:relative;background:var(--tn-night);color:var(--tn-paper);overflow:hidden;isolation:isolate}
+.aurora{position:absolute;inset:-20% -10% auto;height:120%;z-index:-2;filter:blur(70px);opacity:.75;pointer-events:none}
+.aurora i{position:absolute;border-radius:50%;mix-blend-mode:screen;animation:drift 18s ease-in-out infinite alternate}
+.aurora i:nth-child(1){width:46vw;height:46vw;left:48%;top:4%;background:radial-gradient(circle,rgba(82,216,196,.55),transparent 65%)}
+.aurora i:nth-child(2){width:34vw;height:34vw;left:70%;top:30%;background:radial-gradient(circle,rgba(255,139,141,.40),transparent 65%);animation-duration:22s;animation-delay:-6s}
+.aurora i:nth-child(3){width:40vw;height:40vw;left:-8%;top:40%;background:radial-gradient(circle,rgba(8,127,118,.55),transparent 65%);animation-duration:26s;animation-delay:-11s}
+@keyframes drift{0%{transform:translate(0,0) scale(1)}50%{transform:translate(-6%,5%) scale(1.12)}100%{transform:translate(5%,-4%) scale(.94)}}
+.gridlines{position:absolute;inset:0;z-index:-1;background-image:linear-gradient(rgba(255,255,255,.035) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.035) 1px,transparent 1px);background-size:56px 56px;mask-image:radial-gradient(ellipse at 60% 40%,#000 20%,transparent 72%);-webkit-mask-image:radial-gradient(ellipse at 60% 40%,#000 20%,transparent 72%)}
+
+/* Hero */
+.hero{padding:150px 0 110px}
+.hero .wrap{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.02fr);gap:60px;align-items:center}
+.eyebrow{display:inline-flex;align-items:center;gap:10px;font-size:13px;font-weight:600;color:var(--tn-paper);background:var(--glass);border:1px solid var(--glass-line);border-radius:999px;padding:6px 14px 6px 8px}
+.eyebrow b{font-weight:700;font-size:11px;letter-spacing:.06em;color:var(--tn-night);background:var(--tn-mint);border-radius:999px;padding:2px 8px}
+.eyebrow .live{width:7px;height:7px;border-radius:50%;background:var(--tn-coral);animation:ping 2s infinite}
+@keyframes ping{0%{box-shadow:0 0 0 0 var(--glow-coral)}80%,100%{box-shadow:0 0 0 9px rgba(255,139,141,0)}}
+h1{font-size:clamp(38px,5vw,64px);line-height:1.08;letter-spacing:-.04em;font-weight:600;margin:24px 0 22px}
+html[data-language="zh-CN"] h1{font-size:clamp(34px,4.2vw,56px);letter-spacing:-.02em}
+.lead{font-size:18px;color:var(--tn-dark-muted);max-width:540px;margin:0 0 34px}
+.lead strong{color:var(--tn-paper);font-weight:600}
+.cta-row{display:flex;flex-wrap:wrap;gap:12px;align-items:center}
+.cta-note{font-size:13px;color:var(--tn-dark-muted);margin-top:16px}
+
+/* Agent session window */
+.session{position:relative;border-radius:18px;background:linear-gradient(180deg,rgba(24,52,54,.92),rgba(14,34,36,.92));border:1px solid var(--glass-line);box-shadow:0 40px 100px -20px rgba(0,0,0,.6);transform:perspective(1400px) rotateY(-5deg) rotateX(2deg);transition:transform .6s var(--tn-ease)}
+.session:hover{transform:perspective(1400px) rotateY(0) rotateX(0)}
+.session::before{content:"";position:absolute;inset:-1px;border-radius:inherit;padding:1px;background:conic-gradient(from var(--spin,0deg),transparent 0 70%,var(--tn-mint) 80%,var(--tn-coral) 88%,transparent 95%);-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude;animation:spin 6s linear infinite;pointer-events:none}
+@property --spin{syntax:'<angle>';initial-value:0deg;inherits:false}
+@keyframes spin{to{--spin:360deg}}
+.session-bar{display:flex;align-items:center;gap:8px;padding:12px 16px;border-bottom:1px solid var(--glass-line);font-size:12.5px;color:var(--tn-dark-muted)}
+.session-bar i{width:10px;height:10px;border-radius:50%;background:rgba(255,255,255,.12)}
+.session-bar i:first-child{background:#ff8b8d88}.session-bar i:nth-child(2){background:#f6e3a488}.session-bar i:nth-child(3){background:#52d8c488}
+.session-bar span{margin-left:8px}
+.session-bar em{margin-left:auto;font-style:normal;font-size:11px;color:var(--tn-mint);border:1px solid rgba(82,216,196,.35);border-radius:999px;padding:1px 8px}
+.log{list-style:none;margin:0;padding:18px 18px 8px;display:grid;gap:10px;min-height:396px;font-size:13.5px;align-content:start}
+.log li{opacity:0;transform:translateY(8px);transition:opacity .45s var(--tn-ease),transform .45s var(--tn-ease)}
+.log li.in{opacity:1;transform:none}
+.msg{display:grid;grid-template-columns:30px 1fr;gap:10px;align-items:start}
+.av{width:30px;height:26px;border-radius:8px;display:grid;place-items:center;font-size:10px;font-weight:700;letter-spacing:.03em}
+.av.you{background:rgba(255,255,255,.1);color:var(--tn-paper)}
+.bubble{color:var(--tn-paper);padding-top:3px}
+.call{margin-left:40px;font:12.5px/1.5 var(--tn-mono);color:var(--tn-dark-muted);background:rgba(0,0,0,.22);border:1px solid var(--glass-line);border-radius:9px;padding:8px 11px;display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.call .fn{color:var(--tn-mint)}
+.call .ok{margin-left:auto;color:var(--tn-mint);font-family:var(--tn-font);font-size:12px}
+.call .wait{margin-left:auto;color:var(--tn-sand);font-family:var(--tn-font);font-size:12px}
+.approve{margin-left:40px;border-radius:12px;padding:12px 14px;background:rgba(255,139,141,.08);border:1px solid rgba(255,139,141,.45);display:grid;gap:8px;transition:background .4s,border-color .4s}
+.approve .t{display:flex;align-items:center;gap:8px;font-weight:600;font-size:13.5px;color:var(--tn-paper)}
+.approve .t::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--tn-coral);transition:background .4s}
+.approve .meta{font:12px var(--tn-mono);color:var(--tn-dark-muted);overflow-wrap:anywhere}
+.approve .row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.approve .fake-btn{font-size:12.5px;font-weight:600;border-radius:7px;padding:5px 12px;background:var(--tn-paper);color:var(--tn-night);transition:background .3s,box-shadow .3s}
+.approve.done{background:rgba(82,216,196,.08);border-color:rgba(82,216,196,.5)}
+.approve.done .t::before{background:var(--tn-mint)}
+.approve.done .fake-btn{background:var(--tn-mint);box-shadow:0 0 18px -2px var(--glow-mint)}
+.approve .you-note{font-size:12px;color:var(--tn-dark-muted)}
+.session-foot{padding:10px 18px 14px;font-size:11.5px;color:var(--tn-dark-muted);border-top:1px solid var(--glass-line)}
+
+/* Marquee */
+.marquee{border-top:1px solid var(--glass-line);border-bottom:1px solid var(--glass-line);background:rgba(0,0,0,.18);overflow:hidden;padding:18px 0;mask-image:linear-gradient(90deg,transparent,#000 12%,#000 88%,transparent);-webkit-mask-image:linear-gradient(90deg,transparent,#000 12%,#000 88%,transparent)}
+.marquee-track{display:flex;gap:44px;width:max-content;animation:slide 38s linear infinite;font-size:15px;color:var(--tn-dark-muted);white-space:nowrap}
+.marquee-track span{display:inline-flex;align-items:center;gap:10px}
+.marquee-track span::before{content:"";width:6px;height:6px;border-radius:2px;background:var(--tn-mint);opacity:.7}
+@keyframes slide{to{transform:translateX(-50%)}}
+
+/* WebMCP */
+.mcp{padding:120px 0 130px}
+.kicker{display:inline-block;font-size:12.5px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;margin:0 0 14px;color:var(--tn-sea)}
+.dark .kicker{color:var(--tn-mint)}
+h2{font-size:clamp(30px,3.6vw,48px);line-height:1.14;letter-spacing:-.03em;font-weight:600;margin:0 0 18px}
+.sub{font-size:17.5px;color:var(--tn-muted);max-width:680px;margin:0}
+.dark .sub{color:var(--tn-dark-muted)}
+.center{text-align:center}.center .sub{margin:0 auto}
+.pipeline{position:relative;margin:64px 0 0;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:20px;list-style:none;padding:0}
+.pipeline::before{content:"";position:absolute;left:12%;right:12%;top:31px;height:2px;background:linear-gradient(90deg,var(--tn-mint),var(--tn-coral) 50%,var(--tn-mint));background-size:200% 100%;animation:flow 4s linear infinite;opacity:.7}
+@keyframes flow{to{background-position:-200% 0}}
+.pipeline li{position:relative;text-align:center;padding:0 6px}
+.pipeline .node{width:64px;height:64px;margin:0 auto 18px;border-radius:18px;display:grid;place-items:center;background:#15393b;border:1px solid rgba(82,216,196,.4);box-shadow:0 0 30px -6px var(--glow-mint);font:600 13px var(--tn-mono);color:var(--tn-mint)}
+.pipeline li:nth-child(3) .node{border-color:rgba(255,139,141,.6);box-shadow:0 0 30px -4px var(--glow-coral);color:var(--tn-coral)}
+.pipeline strong{display:block;font-size:17px;font-weight:600;color:var(--tn-paper);margin-bottom:6px}
+.pipeline p{font-size:14.5px;color:var(--tn-dark-muted);margin:0}
+.mcp-grid{margin-top:72px;display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,.85fr);gap:22px;align-items:stretch}
+.glass{background:var(--glass);border:1px solid var(--glass-line);border-radius:18px;padding:28px}
+.glass h3{font-size:18px;font-weight:600;margin:0 0 6px;color:var(--tn-paper)}
+.glass p.note{font-size:14px;color:var(--tn-dark-muted);margin:0 0 20px}
+.tools{display:grid;gap:16px}
+.tools .group{display:grid;grid-template-columns:96px 1fr;gap:12px;align-items:start}
+.tools .label{font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--tn-dark-muted);padding-top:6px}
+.chips{display:flex;flex-wrap:wrap;gap:7px}
+.chip{font:12.5px var(--tn-mono);color:var(--tn-surf);background:rgba(82,216,196,.07);border:1px solid rgba(82,216,196,.22);border-radius:8px;padding:5px 9px;transition:background .2s,border-color .2s,transform .2s}
+.chip:hover{background:rgba(82,216,196,.16);border-color:rgba(82,216,196,.6);transform:translateY(-1px)}
+.chip.hot{border-color:rgba(255,139,141,.45);background:rgba(255,139,141,.08);color:#ffd5d6}
+.roles{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-top:22px}
+.role{border-radius:12px;border:1px solid var(--glass-line);padding:14px;text-align:center}
+.role b{display:block;font-size:30px;font-weight:600;letter-spacing:-.03em;color:var(--tn-paper);line-height:1.1}
+.role span{font-size:12.5px;color:var(--tn-dark-muted)}
+.shot-glass{display:grid;place-items:center;padding:22px;background:radial-gradient(circle at 50% 30%,rgba(82,216,196,.18),transparent 70%),var(--glass)}
+.shot-glass a{display:block;width:100%;max-width:405px;cursor:zoom-in}
+.shot-glass img{border-radius:12px;box-shadow:0 30px 70px -20px rgba(0,0,0,.7);width:100%;max-width:405px;height:auto}
+.guard{list-style:none;padding:0;margin:26px 0 0;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px}
+.guard li{font-size:14.5px;color:var(--tn-dark-muted);border-left:2px solid var(--tn-mint);padding:2px 0 2px 14px}
+.guard b{display:block;color:var(--tn-paper);font-weight:600;margin-bottom:4px}
+.fine{font-size:13px;color:var(--tn-muted);margin-top:20px}
+.dark .fine{color:var(--tn-dark-muted)}
+.textlink{color:var(--tn-sea);font-weight:600;text-decoration:none}.textlink:hover{text-decoration:underline}
+.dark .textlink{color:var(--tn-mint)}
+
+/* Light sections */
+.light{padding:120px 0;background:var(--tn-paper)}
+.section-head{margin-bottom:52px}
+.flow{display:grid;grid-template-columns:330px minmax(0,1fr);gap:40px;align-items:start}
+.steps{display:grid;gap:12px}
+.step{all:unset;cursor:pointer;display:block;position:relative;padding:20px 22px;border-radius:14px;border:1px solid var(--tn-line);background:var(--tn-white);transition:border-color .25s,box-shadow .25s,transform .25s;overflow:hidden}
+.step::after{content:"";position:absolute;left:0;bottom:0;height:3px;width:0;background:linear-gradient(90deg,var(--tn-mint),var(--tn-sea))}
+.step:hover{transform:translateX(3px)}
+.step[aria-selected="true"]{border-color:rgba(8,127,118,.5);box-shadow:0 14px 36px -18px rgba(8,127,118,.5)}
+.steps.auto .step[aria-selected="true"]::after{animation:fill 6s linear forwards}
+@keyframes fill{to{width:100%}}
+.step:focus-visible{outline:3px solid var(--tn-mint);outline-offset:3px}
+.step .n{font:600 12px var(--tn-mono);color:var(--tn-sea)}
+.step strong{display:block;font-size:17px;font-weight:600;margin:4px 0}
+.step span.d{font-size:14px;color:var(--tn-muted);display:block}
+.frame{position:relative;border-radius:18px;padding:1px;background:linear-gradient(140deg,rgba(82,216,196,.7),rgba(8,127,118,.15) 40%,rgba(255,139,141,.5));box-shadow:0 40px 80px -30px rgba(15,36,38,.45)}
+.frame-in{border-radius:17px;background:var(--tn-white);overflow:hidden}
+.frame-bar{display:flex;align-items:center;gap:6px;padding:11px 14px;border-bottom:1px solid var(--tn-line);background:#fafaf6}
+.frame-bar i{width:9px;height:9px;border-radius:50%;background:var(--tn-line)}
+.frame-bar span{margin-left:10px;font:12px var(--tn-mono);color:var(--tn-muted)}
+.frame-body{padding:22px;background:linear-gradient(180deg,#f3f2ec,#eceae1);display:grid;place-items:center;min-height:440px}
+.frame-body a{display:block;width:fit-content;max-width:100%;line-height:0;cursor:zoom-in}
+.frame-body img{width:auto;height:auto;max-width:100%;border-radius:9px;box-shadow:0 10px 30px rgba(20,44,45,.12)}
+.panel[hidden]{display:none}
+.panel:not([hidden]) img{animation:rise .5s var(--tn-ease)}
+@keyframes rise{from{opacity:0;transform:translateY(10px) scale(.99)}}
+.caption{font-size:13px;color:var(--tn-muted);margin:14px 4px 0}
+
+/* Bento */
+.bento{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:18px}
+.tile{position:relative;background:var(--tn-white);border:1px solid var(--tn-line);border-radius:18px;padding:28px;overflow:hidden;transition:transform .3s var(--tn-ease),box-shadow .3s}
+.tile:hover{transform:translateY(-4px);box-shadow:0 26px 50px -30px rgba(15,36,38,.4)}
+.tile::before{content:"";position:absolute;width:220px;height:220px;right:-80px;top:-90px;border-radius:50%;background:radial-gradient(circle,rgba(82,216,196,.22),transparent 70%);pointer-events:none}
+.tile h3{font-size:19px;font-weight:600;margin:16px 0 8px}
+.tile p{font-size:15px;color:var(--tn-muted);margin:0}
+.t2{grid-column:span 2}.t4{grid-column:span 4}.t6{grid-column:span 6}
+.icon{width:42px;height:42px;border-radius:12px;display:grid;place-items:center;background:var(--tn-surf);color:var(--tn-sea)}
+.icon svg{width:21px;height:21px}
+.tile.dark-tile{background:var(--tn-night);color:var(--tn-paper);border-color:var(--tn-dark-line)}
+.tile.dark-tile p{color:var(--tn-dark-muted)}
+.tile.dark-tile .icon{background:rgba(82,216,196,.14);color:var(--tn-mint)}
+.tile.dark-tile .textlink{color:var(--tn-mint)}
+.split2{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.2fr);gap:28px;align-items:center}
+.code{background:#0a1a1c;color:var(--tn-surf);border-radius:12px;padding:18px 20px;font:13px/1.75 var(--tn-mono);overflow-x:auto;white-space:pre;border:1px solid var(--tn-dark-line)}
+.code .c{color:var(--tn-dark-muted)}.code .ok{color:var(--tn-mint)}
+.chainrow{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px}
+.chain{display:flex;align-items:center;gap:8px;font-weight:600;font-size:14px;border-radius:999px;padding:7px 14px;border:1px solid var(--tn-line);background:var(--tn-paper)}
+.chain i{width:9px;height:9px;border-radius:50%}
+
+/* Samples */
+.samples{margin-top:56px;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px}
+.sample{position:relative;display:block;text-decoration:none;background:var(--tn-night);color:var(--tn-paper);border-radius:14px;padding:20px;overflow:hidden;transition:transform .25s var(--tn-ease),box-shadow .25s}
+.sample::before{content:"";position:absolute;inset:0;background:radial-gradient(circle at 100% 0,rgba(82,216,196,.25),transparent 55%);opacity:0;transition:opacity .3s}
+.sample:hover{transform:translateY(-3px);box-shadow:0 20px 40px -20px rgba(15,36,38,.6)}.sample:hover::before{opacity:1}
+.sample small{color:var(--tn-mint);font-size:11.5px;font-weight:700;letter-spacing:.08em}
+.sample strong{display:block;font-size:16px;font-weight:600;margin:6px 0 4px}
+.sample strong::after{content:" ↗";color:var(--tn-mint);font-weight:400}
+.sample span{position:relative;font-size:12.5px;color:var(--tn-dark-muted);overflow-wrap:anywhere}
+
+/* Fees */
+.fees{background:linear-gradient(180deg,var(--tn-paper),var(--tn-surf))}
+.fee-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px}
+.fee{background:var(--tn-white);border-radius:18px;padding:28px;border:1px solid rgba(8,127,118,.18)}
+.fee .big{font-size:24px;font-weight:600;letter-spacing:-.02em;margin:0 0 8px;color:var(--tn-ink)}
+.fee p{color:var(--tn-muted);font-size:15px;margin:0}
+
+/* Closing */
+.closing{padding:140px 0;text-align:center}
+.closing h2{font-size:clamp(34px,5vw,64px)}
+.closing p{color:var(--tn-dark-muted);font-size:17.5px;margin:0 auto 34px;max-width:660px}
+.closing .cta-row{justify-content:center}
+footer{background:#0b1d1f;color:var(--tn-dark-muted);border-top:1px solid var(--glass-line);font-size:14px}
+footer .wrap{display:flex;flex-wrap:wrap;gap:14px 28px;align-items:center;padding-top:30px;padding-bottom:38px}
+footer a{text-decoration:none}footer a:hover{color:var(--tn-white)}
+footer .brand img{width:120px}
+footer .spacer{flex:1}
+
+/* Scroll reveal: content stays visible without script, and animates only once it runs. */
+.js .reveal{opacity:0;transform:translateY(26px);transition:opacity .8s var(--tn-ease),transform .8s var(--tn-ease)}
+.js .reveal.in{opacity:1;transform:none}
+.d1{transition-delay:.08s!important}.d2{transition-delay:.16s!important}.d3{transition-delay:.24s!important}
+
+@media (max-width:1040px){
+ .nav{display:none}
+ .hero .wrap,.flow,.mcp-grid,.split2{grid-template-columns:minmax(0,1fr)}
+ .hero{padding:120px 0 80px}
+ .session{transform:none}.session:hover{transform:none}
+ .pipeline{grid-template-columns:repeat(2,minmax(0,1fr));row-gap:36px}.pipeline::before{display:none}
+ .guard{grid-template-columns:minmax(0,1fr)}
+ .t2,.t4{grid-column:span 6}
+ .fee-grid{grid-template-columns:minmax(0,1fr)}
+ .samples{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .steps{grid-template-columns:repeat(3,minmax(0,1fr))}.step span.d{display:none}
+ .frame-body{min-height:0}
+}
+@media (max-width:640px){
+ .wrap{padding:0 16px}
+ .top .wrap{gap:12px;height:60px}
+ .brand img{width:120px}
+ .signin,.actions select{display:none}
+ .hero{padding:104px 0 64px}
+ .lead{font-size:16px}
+ .log{min-height:0;padding:14px 12px 6px}.call,.approve{margin-left:0}
+ .mcp,.light{padding:80px 0}
+ .pipeline{grid-template-columns:minmax(0,1fr)}
+ .tools .group{grid-template-columns:minmax(0,1fr);gap:6px}
+ .roles b{font-size:24px}
+ .steps{grid-template-columns:minmax(0,1fr)}
+ .samples{grid-template-columns:minmax(0,1fr)}
+ .frame-body{padding:10px}
+ .glass,.tile{padding:20px}
+ .closing{padding:96px 0}
+ h2{font-size:27px}
+}
+@media (prefers-reduced-motion:reduce){
+ html{scroll-behavior:auto}
+ *,*::before,*::after{animation:none!important;transition:none!important}
+ .js .reveal{opacity:1;transform:none}
+ .log li{opacity:1;transform:none}
+ .session{transform:none}
+}
+</style>
+<script>document.documentElement.classList.add('js');</script>
+</head>
+<body>
+<a class="skip" href="#main"><span class="zh">跳到正文</span><span class="en">Skip to content</span></a>
+
+<header class="top" id="top">
+ <div class="wrap">
+  <a class="brand" href="/" aria-label="TapeNow"><img src="/brand/v2/lockup-dark.svg" width="150" height="41" alt="TapeNow"></a>
+  <nav class="nav" aria-label="Primary">
+   <a href="#webmcp" class="hot">WebMCP</a>
+   <a href="#flow"><span class="zh">工作流程</span><span class="en">How it works</span></a>
+   <a href="#features"><span class="zh">功能</span><span class="en">Features</span></a>
+   <a href="#fees"><span class="zh">费用</span><span class="en">Fees</span></a>
+   <a href="https://app.tapenow.dev/docs/manual/" class="manual-link"><span class="zh">用户手册</span><span class="en">Manual</span></a>
+  </nav>
+  <div class="actions">
+   <select id="language" aria-label="语言 / Language"><option value="zh-CN">简体中文</option><option value="en">English</option></select>
+   <a class="signin" href="https://app.tapenow.dev/"><span class="zh">登录</span><span class="en">Sign in</span></a>
+   <a class="btn btn-mint" href="https://app.tapenow.dev/"><span class="zh">立即开始</span><span class="en">Get started</span></a>
+  </div>
+ </div>
+</header>
+
+<main id="main">
+<section class="dark hero">
+ <div class="aurora" aria-hidden="true"><i></i><i></i><i></i></div>
+ <div class="gridlines" aria-hidden="true"></div>
+ <div class="wrap">
+  <div>
+   <span class="eyebrow"><b>WebMCP</b><span class="zh">限量公测 · 每天 50 个名额</span><span class="en">Public beta · 50 seats a day</span><span class="live" aria-hidden="true"></span></span>
+   <h1><span class="zh">和 Agent 一起，<br><span class="grad">把作品发布到链上。</span></span><span class="en">Build with your agent.<br><span class="grad">Ship it onchain.</span></span></h1>
+   <p class="lead"><span class="zh">TapeNow 把整个工作台开放给浏览器里的 Agent。它帮你<strong>导入、预览、准备发布</strong>；每个有后果的动作，都等<strong>你来批准</strong>。发布到 BSC、X Layer 或 Base，每个版本都能恢复、能验证。</span><span class="en">TapeNow opens its whole dashboard to the agent in your browser. It <strong>imports, previews and prepares releases</strong> for you — and every consequential step waits for <strong>your approval</strong>. Publish to BSC, X Layer or Base, with every version restorable and verifiable.</span></p>
+   <div class="cta-row">
+    <a class="btn btn-mint" href="https://app.tapenow.dev/"><span class="zh">立即开始</span><span class="en">Get started</span> →</a>
+    <a class="btn btn-ghost" href="#webmcp"><span class="zh">看 Agent 怎么工作</span><span class="en">See the agent at work</span></a>
+   </div>
+   <p class="cta-note"><span class="zh">用邮箱或钱包登录。公测期间 TapeNow 免费；上链的网络费用由你的钱包直接支付。</span><span class="en">Sign in with email or a wallet. Free during the beta; onchain network fees are paid straight from your wallet.</span></p>
+  </div>
+
+  <div class="session" aria-label="Agent session">
+   <div class="session-bar"><i></i><i></i><i></i><span class="mono">app.tapenow.dev</span><em><span class="zh">16 个工具已就绪</span><span class="en">16 tools ready</span></em></div>
+   <ol class="log" id="log">
+    <li class="msg"><span class="av you">YOU</span><span class="bubble"><span class="zh">把 coastline-cafe 的新版本发给团队看看，再准备上 Base。</span><span class="en">Share the new coastline-cafe build with the team, then get it ready for Base.</span></span></li>
+    <li class="call"><span class="fn">tapenow_inspect_project</span><span>coastline-cafe</span><span class="ok">✓ v2 · 1 file</span></li>
+    <li class="call"><span class="fn">tapenow_prepare_action</span><span>private_preview · 24h</span><span class="wait"><span class="zh">等待批准</span><span class="en">needs approval</span></span></li>
+    <li class="approve" id="approve"><span class="t"><span class="zh">创建私有预览</span><span class="en">Create private preview</span></span><span class="meta">op-552a5576d832 · sha256 13a9f437…d67ade</span><span class="row"><span class="fake-btn"><span class="zh">批准这项操作</span><span class="en">Approve this operation</span></span><span class="you-note"><span class="zh">只有你能点</span><span class="en">only you can click this</span></span></span></li>
+    <li class="call"><span class="fn">tapenow_execute_action</span><span>op-552a5576d832</span><span class="ok"><span class="zh">✓ 预览已就绪 · 密码只给你</span><span class="en">✓ preview ready · password shown only to you</span></span></li>
+    <li class="call"><span class="fn">tapenow_prepare_action</span><span>publish_chain · Base</span><span class="wait"><span class="zh">钱包签名交给你</span><span class="en">wallet signature handed to you</span></span></li>
+   </ol>
+   <div class="session-foot"><span class="zh">演示动画。工具名、操作编号和摘要来自真实的 WebMCP 验收记录。</span><span class="en">Illustration. Tool names, operation ID and digest come from a real WebMCP acceptance run.</span></div>
+  </div>
+ </div>
+</section>
+
+<div class="dark" aria-hidden="true">
+ <div class="marquee"><div class="marquee-track" id="marquee">
+  <span>BSC</span><span>X Layer</span><span>Base</span><span>WebMCP</span><span>OKX Wallet</span><span>Binance Wallet</span><span>Coinbase Wallet</span><span>MetaMask</span><span>GitHub</span><span>Vercel</span><span>Cloudflare</span><span>Supabase</span><span>PostgreSQL</span><span>Ed25519</span><span>SHA-256</span>
+ </div></div>
+</div>
+
+<section class="dark mcp" id="webmcp">
+ <div class="aurora" aria-hidden="true" style="opacity:.45"><i></i><i></i><i></i></div>
+ <div class="wrap">
+  <div class="center reveal">
+   <p class="kicker"><span class="zh">WebMCP · 原生页面工具</span><span class="en">WebMCP · native page tools</span></p>
+   <h2><span class="zh">Agent 负责跑腿，<span class="grad">你负责拍板。</span></span><span class="en">Your agent does the legwork. <span class="grad">You make the call.</span></span></h2>
+   <p class="sub"><span class="zh">登录后，TapeNow 会在页面上注册一组 WebMCP 工具。你的 Agent 直接用它们操作工作台，不用抓网页，也拿不到你的密钥。</span><span class="en">Once you sign in, TapeNow registers WebMCP tools on the page. Your agent drives the dashboard through them — no scraping, and never your keys.</span></p>
+  </div>
+
+  <ol class="pipeline">
+   <li class="reveal"><div class="node">01</div><strong><span class="zh">发现</span><span class="en">Discover</span></strong><p><span class="zh">Agent 读取你当前角色能用的工具。</span><span class="en">The agent sees exactly the tools your role allows.</span></p></li>
+   <li class="reveal d1"><div class="node">02</div><strong><span class="zh">准备</span><span class="en">Prepare</span></strong><p><span class="zh">生成操作单，绑定文件、目标、钱包和预算。</span><span class="en">It drafts a request pinned to files, target, wallet and budget.</span></p></li>
+   <li class="reveal d2"><div class="node">03</div><strong><span class="zh">你批准</span><span class="en">You approve</span></strong><p><span class="zh">在你自己的界面里核对差异，点批准。</span><span class="en">You review the diff in your own interface and approve.</span></p></li>
+   <li class="reveal d3"><div class="node">04</div><strong><span class="zh">执行</span><span class="en">Execute</span></strong><p><span class="zh">只执行你批准的那一张；结果不明不会自动重发。</span><span class="en">Only what you approved runs; unclear results are never resent.</span></p></li>
+  </ol>
+
+  <div class="mcp-grid">
+   <div class="glass reveal">
+    <h3><span class="zh">16 个真实工具</span><span class="en">16 real tools</span></h3>
+    <p class="note"><span class="zh">按用途分组。粉色的是会产生后果、需要你批准的操作。</span><span class="en">Grouped by purpose. Coral ones lead to actions you approve.</span></p>
+    <div class="tools">
+     <div class="group"><span class="label"><span class="zh">查询</span><span class="en">Read</span></span><div class="chips"><span class="chip">tapenow_context</span><span class="chip">tapenow_list_workspaces</span><span class="chip">tapenow_select_workspace</span><span class="chip">tapenow_inspect_project</span><span class="chip">tapenow_inspect_release</span><span class="chip">tapenow_build_status</span><span class="chip">tapenow_poll_build</span></div></div>
+     <div class="group"><span class="label"><span class="zh">创建</span><span class="en">Create</span></span><div class="chips"><span class="chip">tapenow_create_project</span><span class="chip">tapenow_create_sample</span></div></div>
+     <div class="group"><span class="label"><span class="zh">操作单</span><span class="en">Actions</span></span><div class="chips"><span class="chip hot">tapenow_prepare_action</span><span class="chip hot">tapenow_execute_action</span><span class="chip">tapenow_action_status</span><span class="chip">tapenow_cancel_action</span><span class="chip hot">tapenow_advance_publication</span></div></div>
+     <div class="group"><span class="label"><span class="zh">交接</span><span class="en">Handoff</span></span><div class="chips"><span class="chip">tapenow_open_handoff</span><span class="chip">tapenow_set_language</span></div></div>
+    </div>
+    <div class="roles">
+     <div class="role"><b>16</b><span><span class="zh">所有者</span><span class="en">Owner</span></span></div>
+     <div class="role"><b>14</b><span><span class="zh">发布者</span><span class="en">Publisher</span></span></div>
+     <div class="role"><b>9</b><span><span class="zh">只读成员</span><span class="en">Viewer</span></span></div>
+    </div>
+   </div>
+   <div class="glass shot-glass reveal d2">
+    <a href="/home/agent-en.webp" target="_blank" rel="noopener"><img src="/home/agent-en.webp" width="560" height="650" loading="lazy" alt="Review agent request: create a private preview, showing files, digest and approval expiry, with the user's Approve button"></a>
+   </div>
+  </div>
+
+  <ul class="guard">
+   <li class="reveal"><b><span class="zh">批准绑定内容</span><span class="en">Approvals are pinned</span></b><span class="zh">文件、配置、目标、钱包或金额一变，批准立即失效；批准本身 10 分钟内有效。</span><span class="en">If files, config, target, wallet or amount change, the approval is void. Approvals expire after 10 minutes.</span></li>
+   <li class="reveal d1"><b><span class="zh">秘密留在你这边</span><span class="en">Secrets stay with you</span></b><span class="zh">钱包签名、OAuth 授权、预览密码和本地文件选择，都交回你的界面完成。</span><span class="en">Wallet signatures, OAuth sign-ins, preview passwords and file pickers are handed back to your interface.</span></li>
+   <li class="reveal d2"><b><span class="zh">服务端说了算</span><span class="en">The server decides</span></b><span class="zh">角色、额度、预算和项目暂停都在服务端复查，Agent 绕不过去。</span><span class="en">Roles, quotas, budgets and project suspension are re-checked on the server. Agents can't route around them.</span></li>
+  </ul>
+  <p class="fine"><span class="zh">需要支持原生 WebMCP 的浏览器（已在 Chromium 152 实测）；不支持时，普通界面照常使用。不是远程 MCP 服务器，也没有 Agent 能自己替你签钱包。</span><span class="en">Requires a browser with native WebMCP (tested on Chromium 152); without it, the normal interface works as usual. Not a remote MCP server, and no agent signs your wallet on its own.</span> <a class="textlink" href="https://app.tapenow.dev/docs/webmcp.html"><span class="zh">WebMCP 使用说明 →</span><span class="en">WebMCP guide →</span></a></p>
+ </div>
+</section>
+
+<section class="light" id="flow">
+ <div class="wrap">
+  <div class="section-head reveal">
+   <p class="kicker"><span class="zh">不用 Agent 也一样顺手</span><span class="en">Just as smooth by hand</span></p>
+   <h2><span class="zh">你已经做好了网站，剩下的交给 TapeNow。</span><span class="en">You built the site. TapeNow handles the rest.</span></h2>
+   <p class="sub"><span class="zh">不提供在线编辑器，也不要求你换工具。把构建结果带进来，确认后再发布。</span><span class="en">No editor to learn, no tools to switch. Bring your build, check it, publish when you say so.</span></p>
+  </div>
+  <div class="flow">
+   <div class="steps reveal" id="steps" role="tablist" aria-label="Flow">
+    <button class="step" role="tab" id="tab-1" aria-controls="panel-1" aria-selected="true"><span class="n">01</span><strong><span class="zh">导入</span><span class="en">Import</span></strong><span class="d"><span class="zh">上传 ZIP 或构建目录，也能从 GitHub、Vercel 导入。文件先存为私有归档。</span><span class="en">Upload a ZIP or build folder, or import from GitHub or Vercel. Files start in a private archive.</span></span></button>
+    <button class="step" role="tab" id="tab-2" aria-controls="panel-2" aria-selected="false" tabindex="-1"><span class="n">02</span><strong><span class="zh">检查并确认</span><span class="en">Check &amp; confirm</span></strong><span class="d"><span class="zh">发布前固定文件、配置和目标；改动任何一项，确认就要重做。</span><span class="en">Files, config and target are pinned; change any of them and you confirm again.</span></span></button>
+    <button class="step" role="tab" id="tab-3" aria-controls="panel-3" aria-selected="false" tabindex="-1"><span class="n">03</span><strong><span class="zh">上链与核验</span><span class="en">Publish &amp; verify</span></strong><span class="d"><span class="zh">写入后逐文件读回核对，再接入普通 HTTPS 网址。访客不需要钱包。</span><span class="en">Every file is read back after writing, then served on an ordinary HTTPS address. Visitors need no wallet.</span></span></button>
+   </div>
+   <div class="reveal d1">
+    <div class="frame"><div class="frame-in">
+     <div class="frame-bar"><i></i><i></i><i></i><span>app.tapenow.dev</span></div>
+     <div class="panel" id="panel-1" role="tabpanel" aria-labelledby="tab-1"><div class="frame-body"><a href="/home/import-en.webp" target="_blank" rel="noopener"><img src="/home/import-en.webp" width="560" height="596" loading="lazy" alt="Import build dialog: drop a ZIP or choose a build folder, or try sample v1 and v2"></a></div></div>
+     <div class="panel" id="panel-2" role="tabpanel" aria-labelledby="tab-2" hidden><div class="frame-body"><a href="/home/check-en.webp" target="_blank" rel="noopener"><img src="/home/check-en.webp" width="633" height="400" loading="lazy" alt="Release confirmation: review file changes and database compatibility, select the release target, then confirm"></a></div></div>
+     <div class="panel" id="panel-3" role="tabpanel" aria-labelledby="tab-3" hidden><div class="frame-body"><a href="/home/gateway-en.webp" target="_blank" rel="noopener"><img src="/home/gateway-en.webp" width="1116" height="506" loading="lazy" alt="TapeNow Gateway showing a valid Base deployment with a stable entry, pinned version and matching on-chain files"></a></div></div>
+    </div></div>
+    <p class="caption"><span class="zh">产品真实界面截图。</span><span class="en">Real product screenshots.</span></p>
+   </div>
+  </div>
+ </div>
+</section>
+
+<section class="light" id="features" style="padding-top:0">
+ <div class="wrap">
+  <div class="section-head reveal">
+   <p class="kicker"><span class="zh">持续管理</span><span class="en">Keep it running</span></p>
+   <h2><span class="zh">发布不是终点。</span><span class="en">Publishing is just the start.</span></h2>
+  </div>
+  <div class="bento">
+   <div class="tile t4 dark-tile reveal">
+    <div class="split2">
+     <div><span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l8 4v5c0 5-3.5 8-8 9-4.5-1-8-4-8-9V7z"/><path d="M9 12l2 2 4-4"/></svg></span><h3><span class="zh">带走你的一切</span><span class="en">Take everything with you</span></h3><p><span class="zh">每个版本都能导出网站文件、SHA-256 清单和 Ed25519 签名回执；不登录 TapeNow 也能在自己电脑上核验。</span><span class="en">Export any version with its files, a SHA-256 manifest and an Ed25519-signed receipt. Verify it on your own machine — no TapeNow sign-in needed.</span></p><p style="margin-top:14px"><a class="textlink" href="https://app.tapenow.dev/docs/receipt-verification.html"><span class="zh">如何核验 →</span><span class="en">How to verify →</span></a></p></div>
+     <div class="code"><span class="c">$ node verify-release.mjs release.json \
+    keys.json 360c4430…74b7ff site</span>
+{
+  "verified": <span class="ok">true</span>,
+  "keyId": "ed25519:360c4430…74b7ff",
+  "legacy": false,
+  "status": "current",
+  "files": 1
+}</div>
+    </div>
+   </div>
+   <div class="tile t2 reveal d1"><span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/></svg></span><h3><span class="zh">放心恢复旧版</span><span class="en">Restore with care</span></h3><p><span class="zh">先建候选版本、核对数据库兼容性，确认后才切换；不会回退你的业务数据。</span><span class="en">A restore creates a candidate and checks database compatibility first; it never rolls back your business data.</span></p></div>
+   <div class="tile t2 reveal"><span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="11" width="18" height="10" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></span><h3><span class="zh">私有预览</span><span class="en">Private previews</span></h3><p><span class="zh">带密码的独立网址，设定有效期；到期或撤销后旧链接立即失效。</span><span class="en">A password-protected address with an expiry. Expired or revoked links stop working at once.</span></p></div>
+   <div class="tile t4 reveal d1"><span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"/></svg></span><h3><span class="zh">三条链，普通网址</span><span class="en">Three chains, ordinary URLs</span></h3><p><span class="zh">每条链单独规划预算和币种。上链后可用普通 HTTPS 网址和你自己的域名打开，稳定入口指向固定版本。</span><span class="en">Each chain has its own budget and currency. Onchain sites open on ordinary HTTPS addresses and your own domain; the stable entry points to a pinned version.</span></p>
+    <div class="chainrow"><span class="chain"><i style="background:#f0b90b"></i>BSC</span><span class="chain"><i style="background:#142c2d"></i>X Layer</span><span class="chain"><i style="background:#0052ff"></i>Base</span></div>
+   </div>
+   <div class="tile t6 reveal">
+    <div class="split2">
+     <div><span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.5.5l3-3a5 5 0 0 0-7-7l-1.7 1.7"/><path d="M14 11a5 5 0 0 0-7.5-.5l-3 3a5 5 0 0 0 7 7l1.7-1.7"/></svg></span><h3><span class="zh">接上你已有的工具</span><span class="en">Plug into what you already use</span></h3><p><span class="zh">在你自己的账号里构建和存数据，TapeNow 负责串起来。钱包按 EIP-6963 标准接入，OKX Wallet 与 MetaMask 已实测。</span><span class="en">Build and store data in your own accounts; TapeNow ties them together. Wallets connect through EIP-6963 — OKX Wallet and MetaMask are tested.</span></p></div>
+     <div class="chainrow" style="margin:0"><span class="chain">GitHub</span><span class="chain">Vercel</span><span class="chain">Cloudflare</span><span class="chain">Supabase</span><span class="chain">PostgreSQL</span><span class="chain">OKX Wallet</span><span class="chain">Binance Wallet</span><span class="chain">Coinbase Wallet</span><span class="chain">MetaMask</span></div>
+    </div>
+   </div>
+  </div>
+  <p class="fine"><span class="zh">名称仅用于说明兼容性，不代表合作关系。目前支持静态网站和有限的 Worker 服务，不能自动迁移所有 Vercel 运行时。</span><span class="en">Names describe compatibility only and imply no partnership. Static sites and limited Worker services only; not every Vercel runtime migrates automatically.</span></p>
+
+  <div class="samples">
+   <a class="sample reveal" href="https://gw-p-d0b1c8d85355.tapenow.dev/" target="_blank" rel="noopener"><small>BASE</small><strong><span class="zh">Gateway 验收样本</span><span class="en">Gateway sample</span></strong><span>gw-p-d0b1c8d85355.tapenow.dev</span></a>
+   <a class="sample reveal d1" href="https://gw-p-6d55c241216e.tapenow.dev/" target="_blank" rel="noopener"><small>X LAYER</small><strong><span class="zh">Gateway 验收样本</span><span class="en">Gateway sample</span></strong><span>gw-p-6d55c241216e.tapenow.dev</span></a>
+   <a class="sample reveal d2" href="https://bsc-qa.tapenow.dev/" target="_blank" rel="noopener"><small>BSC</small><strong><span class="zh">HashPort 域名样本</span><span class="en">HashPort domain sample</span></strong><span>bsc-qa.tapenow.dev</span></a>
+   <a class="sample reveal d3" href="https://tn-p-843fcfebaac2.pages.dev/" target="_blank" rel="noopener"><small>CLOUDFLARE</small><strong><span class="zh">自有账号发布样本</span><span class="en">Own-account sample</span></strong><span>tn-p-843fcfebaac2.pages.dev</span></a>
+  </div>
+  <p class="fine"><span class="zh">这些是我们自己做的验收样本，用来证明流程真实可用，不是客户案例。</span><span class="en">Our own acceptance samples, proving the flow end to end — not customer showcases.</span></p>
+ </div>
+</section>
+
+<section class="light fees" id="fees">
+ <div class="wrap">
+  <div class="section-head reveal">
+   <p class="kicker"><span class="zh">费用</span><span class="en">Fees</span></p>
+   <h2><span class="zh">钱付给谁，写得清清楚楚。</span><span class="en">Know exactly who you pay.</span></h2>
+  </div>
+  <div class="fee-grid">
+   <div class="fee reveal"><p class="big"><span class="zh">公测期间免费</span><span class="en">Free during beta</span></p><p><span class="zh">使用 TapeNow 不收费。每个账号包含 3 个项目、9 个版本和 100 MiB 归档空间。</span><span class="en">TapeNow itself costs nothing. Each account includes 3 projects, 9 versions and 100 MiB of archive space.</span></p></div>
+   <div class="fee reveal d1"><p class="big"><span class="zh">上链费用直付</span><span class="en">Onchain fees, paid direct</span></p><p><span class="zh">gas 付给区块链网络；流片、开通容器、激活地址按上游合约定价，由你的钱包直接支付。TapeNow 不代收、不加价。</span><span class="en">Gas goes to the network; chip, container and address activation are priced by upstream contracts and paid straight from your wallet. TapeNow neither collects nor marks them up.</span></p></div>
+   <div class="fee reveal d2"><p class="big"><span class="zh">访客零成本</span><span class="en">Free for visitors</span></p><p><span class="zh">访客打开网站不需要钱包，也不用为每次访问付 gas。你自己的云服务按各自套餐计费。</span><span class="en">Visitors need no wallet and pay no gas to open your site. Your own cloud services bill you on their own plans.</span></p></div>
+  </div>
+  <p class="fine"><a class="textlink" href="https://app.tapenow.dev/docs/fees.html"><span class="zh">查看完整费用说明 →</span><span class="en">Read the full fee guide →</span></a></p>
+ </div>
+</section>
+
+<section class="dark closing">
+ <div class="aurora" aria-hidden="true"><i></i><i></i><i></i></div>
+ <div class="gridlines" aria-hidden="true"></div>
+ <div class="wrap reveal">
+  <h2><span class="zh">好作品，<span class="grad">接着发布。</span></span><span class="en">Good work. <span class="grad">Next release.</span></span></h2>
+  <p><span class="zh">带上你的 Agent 一起来。公测名额每天 50 个，用完即止，第二天再开放。</span><span class="en">Bring your agent. 50 new beta seats open every day, first come, first served.</span></p>
+  <div class="cta-row">
+   <a class="btn btn-mint" href="https://app.tapenow.dev/"><span class="zh">立即开始</span><span class="en">Get started</span> →</a>
+   <a class="btn btn-ghost manual-link" href="https://app.tapenow.dev/docs/manual/"><span class="zh">先看用户手册</span><span class="en">Read the manual</span></a>
+  </div>
+ </div>
+</section>
+</main>
+
+<footer>
+ <div class="wrap">
+  <a class="brand" href="/" aria-label="TapeNow"><img src="/brand/v2/lockup-dark.svg" width="120" height="33" alt="TapeNow"></a>
+  <span class="spacer"></span>
+  <a href="https://app.tapenow.dev/docs/manual/" class="manual-link"><span class="zh">用户手册</span><span class="en">Manual</span></a>
+  <a href="https://app.tapenow.dev/docs/webmcp.html">WebMCP</a>
+  <a href="https://app.tapenow.dev/docs/fees.html"><span class="zh">费用说明</span><span class="en">Fees</span></a>
+  <a href="https://app.tapenow.dev/docs/gateway.html">Gateway</a>
+  <a href="/privacy.html"><span class="zh">隐私说明</span><span class="en">Privacy</span></a>
+  <a href="/terms.html"><span class="zh">测试条款</span><span class="en">Beta terms</span></a>
+  <a href="https://app.tapenow.dev/?feedback=1"><span class="zh">反馈</span><span class="en">Feedback</span></a>
+ </div>
+</footer>
+
+<script>
+(function(){
+ var root=document.documentElement,select=document.getElementById('language'),reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+ function apply(l){root.lang=l;root.dataset.language=l;select.value=l;document.title=l==='en'?'TapeNow — Build with your agent. Ship it onchain.':'TapeNow — 和你的 Agent 一起，把作品发布到链上';
+  document.querySelectorAll('.manual-link').forEach(function(a){a.href='https://app.tapenow.dev/docs/manual/'+(l==='en'?'?lang=en':'');});}
+ apply(root.dataset.language);
+ select.addEventListener('change',function(){apply(select.value);try{localStorage.setItem('tapenow.language',select.value)}catch(e){}});
+
+ // Header turns to glass once the hero scrolls away.
+ var top=document.getElementById('top');function onScroll(){top.classList.toggle('scrolled',scrollY>24);}addEventListener('scroll',onScroll,{passive:true});onScroll();
+
+ // Duplicate the marquee once so the loop is seamless.
+ var m=document.getElementById('marquee');m.innerHTML+=m.innerHTML;
+
+ // Reveal on scroll. Anything reached or already passed is shown, so jumping to an
+ // anchor or scrolling fast never leaves a section blank.
+ var pending=[].slice.call(document.querySelectorAll('.reveal')),queued=false;
+ function reveal(){queued=false;pending=pending.filter(function(el){if(reduce||el.getBoundingClientRect().top<innerHeight*.92){el.classList.add('in');return false;}return true;});}
+ function schedule(){if(!queued&&pending.length){queued=true;requestAnimationFrame(reveal);}}
+ addEventListener('scroll',schedule,{passive:true});addEventListener('resize',schedule);reveal();
+
+ // Flow tabs: arrow keys move between steps (WAI-ARIA tabs); auto-advance until the visitor picks one.
+ var tabs=[].slice.call(document.querySelectorAll('.step')),list=document.getElementById('steps'),auto=!reduce,timer;
+ function pick(t,focus){tabs.forEach(function(x){var on=x===t;x.setAttribute('aria-selected',on);x.tabIndex=on?0:-1;document.getElementById(x.getAttribute('aria-controls')).hidden=!on;});if(focus)t.focus();}
+ function stop(){auto=false;clearTimeout(timer);list.classList.remove('auto');}
+ function next(){var i=tabs.findIndex(function(t){return t.getAttribute('aria-selected')==='true'});pick(tabs[(i+1)%tabs.length]);timer=setTimeout(next,6000);}
+ tabs.forEach(function(t,i){t.addEventListener('click',function(){stop();pick(t)});t.addEventListener('keydown',function(e){var d=e.key==='ArrowDown'||e.key==='ArrowRight'?1:e.key==='ArrowUp'||e.key==='ArrowLeft'?-1:0;if(d){e.preventDefault();stop();pick(tabs[(i+d+tabs.length)%tabs.length],true);}});});
+ if(auto){list.classList.add('auto');timer=setTimeout(next,6000);}
+
+ // Agent session: lines appear in order, the approval card flips to approved, then the run loops.
+ var lines=[].slice.call(document.querySelectorAll('#log li')),card=document.getElementById('approve');
+ if(reduce){lines.forEach(function(l){l.classList.add('in')});card.classList.add('done');return;}
+ var gaps=[500,1000,1200,1300,2400,1300],hold=5200;
+ function run(){lines.forEach(function(l){l.classList.remove('in')});card.classList.remove('done');var t=0;
+  lines.forEach(function(l,i){t+=gaps[i];setTimeout(function(){l.classList.add('in')},t);if(l===card)setTimeout(function(){card.classList.add('done')},t+1500);});
+  setTimeout(run,t+hold);}
+ run();
+})();
+</script>
+</body>
+</html>

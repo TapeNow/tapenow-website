@@ -1,0 +1,62 @@
+{
+ "import-en": {
+  "source": "docs/manual/screens/import-en.png",
+  "box": [
+   440,
+   152,
+   1000,
+   748
+  ],
+  "size": [
+   560,
+   596
+  ],
+  "bytes": 14444,
+  "sha256": "2238cff64e558e9fe95405b57b7035e339c509afa73d1cd0c2232eb8c296cdfa"
+ },
+ "check-en": {
+  "source": "docs/manual/screens/release-check-en.png",
+  "box": [
+   282,
+   300,
+   915,
+   700
+  ],
+  "size": [
+   633,
+   400
+  ],
+  "bytes": 16764,
+  "sha256": "12027be2945cb60e233429bed2382309834468e6101c6ced2015c91fb5ad10d1"
+ },
+ "gateway-en": {
+  "source": "docs/manual/screens/gateway-live-en.png",
+  "box": [
+   14,
+   0,
+   1130,
+   506
+  ],
+  "size": [
+   1116,
+   506
+  ],
+  "bytes": 33792,
+  "sha256": "e2419015625302df9ee5253b267b537f61e6888e942973a345bc35b5a423c855"
+ },
+ "agent-en": {
+  "source": "docs/manual/screens/agent-review-en.png",
+  "box": [
+   440,
+   200,
+   1000,
+   850
+  ],
+  "size": [
+   560,
+   650
+  ],
+  "bytes": 19324,
+  "sha256": "d270be48696e2bf53f14bd5e28f66359f19e8c901fccb08839f2e8812ff5d50f"
+ }
+}
